@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>มาง้ออะ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #52B1FF;
+            --bg-blue: #c5e3f5;
+            --white: #ffffff;
+            --soft-blue: #c2e8ff;
+        }
+
+        * {
+            box-sizing: border-box; /* ป้องกันขนาดปุ่มเกินขอบจอ */
+            -webkit-tap-highlight-color: transparent; /* ลบสีฟ้าเวลาแตะบน iPhone */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-blue);
+            font-family: 'Kanit', sans-serif;
+            overflow: hidden; /* ป้องกันการเลื่อนจอเวลาปุ่มขยาย */
+            touch-action: manipulation;
+        }
+
+        .container {
+            background-color: var(--white);
+            width: 90%; /* ขยายตามหน้าจอมือถือ */
+            max-width: 350px;
+            padding: 30px 20px;
+            border-radius: 30px;
+            box-shadow: 0 10px 25px rgba(0, 35, 87, 0.2);
+            text-align: center;
+            border: 8px solid #a0d4f3;
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--primary-blue);
+            font-size: 26px;
+            margin: 0 0 20px 0;
+        }
+
+        .content-card {
+            background-color: var(--soft-blue);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .emoji {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #b4e4ff;
+            margin: 0 auto 15px;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #444;
+            line-height: 1.4;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            width: 100%;
+            min-height: 150px; /* จองที่ว่างให้ปุ่มขยาย */
+            justify-content: center;
+        }
+
+        .btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-family: 'Kanit', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: bold;
+        }
+
+        .btn-yes {
+            background: linear-gradient(90deg, #7ed0ff, #52B1FF);
+            color: white;
+            z-index: 5;
+        }
+
+        .btn-no {
+            background-color: #c2e9ff;
+            color: #686868;
+            border: 2px solid #bee7ff;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>มาง้อออออ</h1>
+
+        <div class="content-card">
+            <div class="emoji">🙇‍♀️</div>
+            
+            <div class="profile-pic">
+                <img src="https://i.pinimg.com/736x/56/81/c0/5681c097ba7e093c81d4f4d6fd12d48b.jpg" alt="รูปคู่">
+            </div>
+
+            <div class="main-text">มาง้ออะ ขอโทษนะที่มึน</div>
+        </div>
+
+        <div class="btn-container">
+            <button class="btn btn-yes" id="btn-yes" onclick="sayYes()">ดีก็ได้</button>
+            <button class="btn btn-no" id="btn-no" onclick="sayNo()">ไม่ นอย</button>
+        </div>
+    </div>
+
+    <script>
+        let noScale = 1;
+        let yesScale = 1;
+        let hasAlerted = false;
+
+        function sayYes() {
+            alert("เริ่ดเลยล่ะ");
+        }
+
+        function sayNo() {
+            const btnNo = document.getElementById('btn-no');
+            const btnYes = document.getElementById('btn-yes');
+            
+            if (!hasAlerted) {
+                alert("อันนี้กดไม่ได้จ้า อิอิ");
+                hasAlerted = true;
+            }
+
+            // ลดขนาดปุ่ม "ไม่ นอย" ทีละ 0.2
+            noScale -= 0.2;
+            // เพิ่มขนาดปุ่ม "ดีก็ได้" ทีละ 0.3 (ให้ใหญ่กว่าเพื่อให้กดง่ายขึ้น)
+            yesScale += 0.3;
+
+            if (noScale <= 0.2) {
+                btnNo.style.display = 'none';
+                // เมื่อเหลือปุ่มเดียว ให้ปุ่ม Yes เด้งดึ๋งดึงดูดสายตา
+                btnYes.style.transform = `scale(${yesScale})`;
+            } else {
+                btnNo.style.transform = `scale(${noScale})`;
+                btnYes.style.transform = `scale(${yesScale})`;
+            }
+        }
+    </script>
+
+</body>
+</html>
