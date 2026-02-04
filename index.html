@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>มาง้ออะ</title>
+    <title>โห่บี๋</title>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -14,8 +14,8 @@
         }
 
         * {
-            box-sizing: border-box; /* ป้องกันขนาดปุ่มเกินขอบจอ */
-            -webkit-tap-highlight-color: transparent; /* ลบสีฟ้าเวลาแตะบน iPhone */
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
@@ -27,13 +27,13 @@
             min-height: 100vh;
             background-color: var(--bg-blue);
             font-family: 'Kanit', sans-serif;
-            overflow: hidden; /* ป้องกันการเลื่อนจอเวลาปุ่มขยาย */
+            overflow: hidden;
             touch-action: manipulation;
         }
 
         .container {
             background-color: var(--white);
-            width: 90%; /* ขยายตามหน้าจอมือถือ */
+            width: 90%;
             max-width: 350px;
             padding: 30px 20px;
             border-radius: 30px;
@@ -41,6 +41,28 @@
             text-align: center;
             border: 8px solid #a0d4f3;
             z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-20px); }
+            60% { transform: translateY(-10px); }
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
         h1 {
@@ -59,6 +81,11 @@
         .emoji {
             font-size: 50px;
             margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .emoji.spin {
+            animation: spin 1s linear;
         }
 
         .profile-pic {
@@ -70,12 +97,17 @@
             overflow: hidden;
             border: 5px solid white;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
         }
 
         .profile-pic img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .profile-pic.bounce {
+            animation: bounce 1s;
         }
 
         .main-text {
@@ -85,14 +117,21 @@
             line-height: 1.4;
         }
 
+        .sub-text {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
         .btn-container {
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 15px;
             width: 100%;
-            min-height: 150px; /* จองที่ว่างให้ปุ่มขยาย */
+            min-height: 150px;
             justify-content: center;
+            position: relative;
         }
 
         .btn {
@@ -108,6 +147,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             font-weight: bold;
+            position: relative;
         }
 
         .btn-yes {
@@ -116,66 +156,227 @@
             z-index: 5;
         }
 
+        .btn-yes.pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(82, 177, 255, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(82, 177, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(82, 177, 255, 0); }
+        }
+
         .btn-no {
             background-color: #c2e9ff;
             color: #686868;
             border: 2px solid #bee7ff;
             z-index: 1;
         }
+
+        /* ฮาร์ทกระจาย */
+        .heart {
+            position: fixed;
+            font-size: 30px;
+            pointer-events: none;
+            animation: float-up 3s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.5);
+            }
+        }
+
+        /* ข้อความกวนๆ */
+        .tease-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2rem;
+            color: #ff6b9d;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 9999;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .tease-text.show {
+            animation: popup 1.5s ease-out;
+        }
+
+        @keyframes popup {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        /* เปลี่ยนสีพื้นหลัง */
+        @keyframes colorChange {
+            0% { background-color: #c5e3f5; }
+            25% { background-color: #ffd4e5; }
+            50% { background-color: #d4f5e5; }
+            75% { background-color: #fff4d4; }
+            100% { background-color: #c5e3f5; }
+        }
+
+        body.disco {
+            animation: colorChange 2s infinite;
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>มาง้อออออ</h1>
+    <div class="container" id="container">
+        <h1>โธ่คนดีงอนพี่ทำไม มาง้อแล้ว ดีกันมั้ย ดีกันเถอะ ขอโทษคับ</h1>
 
         <div class="content-card">
-            <div class="emoji">🙇‍♀️</div>
+            <div class="emoji" id="emoji">🙇‍♀️</div>
             
-            <div class="profile-pic">
+            <div class="profile-pic" id="profilePic">
                 <img src="https://i.pinimg.com/736x/56/81/c0/5681c097ba7e093c81d4f4d6fd12d48b.jpg" alt="รูปคู่">
             </div>
 
-            <div class="main-text">มาง้ออะ ขอโทษนะที่มึน</div>
+            <div class="main-text">ดีกัน ดีกัน ดีกัน ดีกัน ดีกัน</div>
+            <div class="sub-text">นะ นะ นะ นะ นะ</div>
         </div>
 
         <div class="btn-container">
-            <button class="btn btn-yes" id="btn-yes" onclick="sayYes()">ดีก็ได้</button>
+            <button class="btn btn-yes" id="btn-yes" onclick="sayYes()">โอเค ยอมม</button>
             <button class="btn btn-no" id="btn-no" onclick="sayNo()">ไม่ นอย</button>
         </div>
     </div>
+
+    <div class="tease-text" id="teaseText"></div>
 
     <script>
         let noScale = 1;
         let yesScale = 1;
         let hasAlerted = false;
+        let noClickCount = 0;
+
+        const teaseMessages = [
+            "หึหึหึ",
+            "บอกแล้วกดไม่ได",
+            "ฮั่นแน่ ",
+            "โห๋บี๋",
+            "ดื้อ",
+            "อย่าดื้ออ",
+            "เค้าว่ากดข้างบนดีกว่า",
+            "เดี๋ยวเลี้ยงหนม"
+        ];
 
         function sayYes() {
-            alert("เริ่ดเลยล่ะ");
+            // ฮาร์ทกระจาย
+            for (let i = 0; i < 20; i++) {
+                createHeart();
+            }
+            
+            // เปลี่ยน emoji
+            document.getElementById('emoji').innerHTML = '🥰';
+            document.getElementById('emoji').classList.add('spin');
+            
+            // ข้อความใหญ่
+            showTeaseText("น่ารักมาก");
+            
+            setTimeout(() => {
+                alert("เริ่ดเลยล่ะ 💖");
+            }, 500);
         }
 
         function sayNo() {
             const btnNo = document.getElementById('btn-no');
             const btnYes = document.getElementById('btn-yes');
+            const container = document.getElementById('container');
+            const profilePic = document.getElementById('profilePic');
             
+            noClickCount++;
+
+            // ลูกเล่นที่ 1: Alert ครั้งแรก
             if (!hasAlerted) {
                 alert("อันนี้กดไม่ได้จ้า อิอิ");
                 hasAlerted = true;
             }
 
-            // ลดขนาดปุ่ม "ไม่ นอย" ทีละ 0.2
+            // ลูกเล่นที่ 2: เขย่ากล่อง
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 500);
+
+            // ลูกเล่นที่ 3: รูปเด้ง
+            if (noClickCount % 2 === 0) {
+                profilePic.classList.add('bounce');
+                setTimeout(() => profilePic.classList.remove('bounce'), 1000);
+            }
+
+            // ลูกเล่นที่ 4: ข้อความกวนๆ สุ่มขึ้นมา
+            if (noClickCount <= teaseMessages.length) {
+                showTeaseText(teaseMessages[noClickCount - 1]);
+            }
+
+            // ลูกเล่นที่ 5: ปุ่มใช่เริ่ม pulse เมื่อกด "ไม่" ครั้งที่ 3
+            if (noClickCount >= 3) {
+                btnYes.classList.add('pulse');
+            }
+
+            // ลูกเล่นที่ 6: พื้นหลังกระพริบสีเมื่อกดเยอะ
+            if (noClickCount >= 5) {
+                document.body.classList.add('disco');
+                setTimeout(() => document.body.classList.remove('disco'), 2000);
+            }
+
+            // ลูกเล่นที่ 7: ปุ่ม "ไม่" วิ่งหนี (เปลี่ยนตำแหน่ง)
+            if (noClickCount >= 4 && noScale > 0.4) {
+                const randomX = Math.random() * 50 - 25;
+                const randomY = Math.random() * 50 - 25;
+                btnNo.style.position = 'relative';
+                btnNo.style.left = randomX + 'px';
+                btnNo.style.top = randomY + 'px';
+            }
+
+            // ลูกเล่นเดิม: ลดขนาดปุ่ม "ไม่" และขยายปุ่ม "ใช่"
             noScale -= 0.2;
-            // เพิ่มขนาดปุ่ม "ดีก็ได้" ทีละ 0.3 (ให้ใหญ่กว่าเพื่อให้กดง่ายขึ้น)
             yesScale += 0.3;
 
             if (noScale <= 0.2) {
                 btnNo.style.display = 'none';
-                // เมื่อเหลือปุ่มเดียว ให้ปุ่ม Yes เด้งดึ๋งดึงดูดสายตา
                 btnYes.style.transform = `scale(${yesScale})`;
+                showTeaseText("สงสัยต้องดีกันแล้วมั้ง");
             } else {
                 btnNo.style.transform = `scale(${noScale})`;
                 btnYes.style.transform = `scale(${yesScale})`;
             }
+        }
+
+        // ฟังก์ชันสร้างฮาร์ทกระจาย
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '💕';
+            heart.style.left = Math.random() * window.innerWidth + 'px';
+            heart.style.top = window.innerHeight + 'px';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+
+        // ฟังก์ชันแสดงข้อความกวนๆ
+        function showTeaseText(message) {
+            const teaseText = document.getElementById('teaseText');
+            teaseText.innerHTML = message;
+            teaseText.classList.add('show');
+
+            setTimeout(() => {
+                teaseText.classList.remove('show');
+            }, 1500);
         }
     </script>
 
